@@ -1,12 +1,12 @@
-const apiKey = "Your API Key"; // Replace with your actual API key
-
-// Function to send user input to OpenAI and get a response
 async function sendToGPT(inputText) {
+    const player = GetPlayer(); // Access Storyline variables
+    const apiKey = player.GetVar("API_Key"); // Retrieve API key from Storyline variable
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${apiKey}`
+            "Authorization": `Bearer ${apiKey}` // Use the API key here
         },
         body: JSON.stringify({
             model: "gpt-3.5-turbo",
@@ -18,9 +18,10 @@ async function sendToGPT(inputText) {
     return data.choices[0].message.content;
 }
 
-// Function to handle user input and display the bot's response
 async function handleSend() {
-    const userText = document.getElementById("user-input").value;
-    const botResponse = await sendToGPT(userText);
-    document.getElementById("bot-response").innerText = botResponse;
+    const player = GetPlayer();
+    const userText = player.GetVar("UserInput"); // Get user input from Storyline
+
+    const botResponse = await sendToGPT(userText); // Call the sendToGPT function
+    player.SetVar("BotResponse", botResponse); // Set response in Storyline variable
 }
